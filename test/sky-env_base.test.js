@@ -120,23 +120,22 @@ describe('SkyEnv', function() {
     })
   })
 
-  describe('- getLastBuild()', function() {
+  describe('- lastBuild', function() {
     describe('> when not set', function() {
       it('should return the default 0 date', function() {
         fs.writeJsonSync(CFG_FILE, {})
         var se = new SkyEnv(tl.findBaseDirSync())
         se.loadConfigsSync()
-        EQ (se.getLastBuild().getTime(), new Date(0).getTime())
+        EQ (se.lastBuild.getTime(), new Date(0).getTime())
       })
     })
 
     describe('> when set', function() {
       it('should return the  date', function() {
         fs.writeJsonSync(CFG_FILE, {build: {lastBuild: '2013-04-01'}})
-        
         var se = new SkyEnv(tl.findBaseDirSync())
         se.loadConfigsSync()
-        EQ (se.getLastBuild().getTime(), new Date('2013-04-01').getTime())
+        EQ (se.lastBuild.getTime(), new Date('2013-04-01').getTime())
       })
     })
   })
@@ -145,7 +144,6 @@ describe('SkyEnv', function() {
     describe('> when specified in config', function() {
       it('it should return the proper theme', function() {
         fs.writeJsonSync(CFG_FILE, {site: {theme: 'shiny'}})
-        
         var se = new SkyEnv(tl.findBaseDirSync())
         se.loadConfigsSync()
         EQ (se.getThemeName(), 'shiny')
