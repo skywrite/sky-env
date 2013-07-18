@@ -2,8 +2,9 @@ var testutil = require('testutil')
   , fs = require('fs-extra')
   , P = require('autoresolve')
   , skyenv  = require(P('lib/sky-env'))
-  , libsky = require(P('lib/sky'))
+  , SkyEnv = skyenv.SkyEnv
   , path = require('path')
+  , pp = require('parentpath')
 
 var TEST_DIR = null
   , CFG_FILE = null
@@ -14,6 +15,10 @@ function removePrivate(dir) {
   if (dir.indexOf('/private/tmp') === 0)  //MAC OS X symlinks /tmp to /private/tmp
     dir = dir.replace('/private', '');
   return dir
+}
+
+function findBaseDirSync () {
+  return pp.sync('sky/config.json')
 }
 
 describe('SkyEnv', function() {
@@ -29,7 +34,7 @@ describe('SkyEnv', function() {
         process.chdir(TEST_DIR)
         fs.writeJsonSync(CFG_FILE, {build: {outputDir: 'superman/'}})
         
-        var se = new SkyEnv(libsky.findBaseDirSync())
+        var se = new SkyEnv(findBaseDirSync())
         se.loadConfigsSync()
         EQ (removePrivate(se.getOutputDir()), path.join(TEST_DIR, 'superman'))
       })
@@ -40,7 +45,7 @@ describe('SkyEnv', function() {
         process.chdir(TEST_DIR)
         fs.writeJsonSync(CFG_FILE, {})
         
-        var se = new SkyEnv(libsky.findBaseDirSync())
+        var se = new SkyEnv(findBaseDirSync())
         se.loadConfigsSync()
         EQ (removePrivate(se.getOutputDir()), path.join(TEST_DIR, 'public'))
       })
@@ -62,7 +67,7 @@ describe('SkyEnv', function() {
         var articlesDir = path.join(TEST_DIR, 'articles')
         fs.writeJsonSync(CFG_FILE, {articles: {urlformat: '{{slug}}'}})
         
-        var se = new SkyEnv(libsky.findBaseDirSync())
+        var se = new SkyEnv(findBaseDirSync())
         se.loadConfigsSync()
         var data = {
           slug: 'burt-and-ernie'
@@ -77,7 +82,7 @@ describe('SkyEnv', function() {
         var articlesDir = path.join(TEST_DIR, 'articles')
         fs.writeJsonSync(CFG_FILE, {})
         
-        var se = new SkyEnv(libsky.findBaseDirSync())
+        var se = new SkyEnv(findBaseDirSync())
         se.loadConfigsSync()
         var data = {
           slug: 'burt-and-ernie',
@@ -97,7 +102,7 @@ describe('SkyEnv', function() {
         process.chdir(TEST_DIR)
         fs.writeJsonSync(CFG_FILE, {articles: {index: 'superIndex'}})
 
-        var se = new SkyEnv(libsky.findBaseDirSync())
+        var se = new SkyEnv(findBaseDirSync())
         se.loadConfigsSync()
         EQ (se.getArticleIndex(), 'superIndex')
       })
@@ -108,7 +113,7 @@ describe('SkyEnv', function() {
         process.chdir(TEST_DIR)
         fs.writeJsonSync(CFG_FILE, {})
 
-        var se = new SkyEnv(libsky.findBaseDirSync())
+        var se = new SkyEnv(findBaseDirSync())
         se.loadConfigsSync()
         EQ (se.getArticleIndex(), 'index.html')
       })
@@ -121,7 +126,7 @@ describe('SkyEnv', function() {
         process.chdir(TEST_DIR)
         fs.writeJsonSync(CFG_FILE, {})
         
-        var se = new SkyEnv(libsky.findBaseDirSync())
+        var se = new SkyEnv(findBaseDirSync())
         se.loadConfigsSync()
         EQ (se.getIndexTitle(), 'Sky Site')
       })
@@ -132,7 +137,7 @@ describe('SkyEnv', function() {
         process.chdir(TEST_DIR)
         fs.writeJsonSync(CFG_FILE, {site: {name: 'Cool Blog'}})
         
-        var se = new SkyEnv(libsky.findBaseDirSync())
+        var se = new SkyEnv(findBaseDirSync())
         se.loadConfigsSync()
         EQ (se.getIndexTitle(), 'Cool Blog')
       })
@@ -143,7 +148,7 @@ describe('SkyEnv', function() {
         process.chdir(TEST_DIR)
         fs.writeJsonSync(CFG_FILE, {site: {name: 'Cool Blog', tagline: 'where cool people visit'}})
         
-        var se = new SkyEnv(libsky.findBaseDirSync())
+        var se = new SkyEnv(findBaseDirSync())
         se.loadConfigsSync()
         EQ (se.getIndexTitle(), 'Cool Blog: where cool people visit')
       })
@@ -154,7 +159,7 @@ describe('SkyEnv', function() {
         process.chdir(TEST_DIR)
         fs.writeJsonSync(CFG_FILE, {site: {name: 'Cool Blog', tagline: 'where cool people visit', title: 'TITLE'}})
         
-        var se = new SkyEnv(libsky.findBaseDirSync())
+        var se = new SkyEnv(findBaseDirSync())
         se.loadConfigsSync()
         EQ (se.getIndexTitle(), 'TITLE')
       })
@@ -167,7 +172,7 @@ describe('SkyEnv', function() {
         process.chdir(TEST_DIR)
         fs.writeJsonSync(CFG_FILE, {})
         
-        var se = new SkyEnv(libsky.findBaseDirSync())
+        var se = new SkyEnv(findBaseDirSync())
         se.loadConfigsSync()
         EQ (se.getLastBuild().getTime(), new Date(0).getTime())
       })
@@ -178,7 +183,7 @@ describe('SkyEnv', function() {
         process.chdir(TEST_DIR)
         fs.writeJsonSync(CFG_FILE, {build: {lastBuild: '2013-04-01'}})
         
-        var se = new SkyEnv(libsky.findBaseDirSync())
+        var se = new SkyEnv(findBaseDirSync())
         se.loadConfigsSync()
         EQ (se.getLastBuild().getTime(), new Date('2013-04-01').getTime())
       })
@@ -191,7 +196,7 @@ describe('SkyEnv', function() {
         process.chdir(TEST_DIR)
         fs.writeJsonSync(CFG_FILE, {site: {theme: 'shiny'}})
         
-        var se = new SkyEnv(libsky.findBaseDirSync())
+        var se = new SkyEnv(findBaseDirSync())
         se.loadConfigsSync()
         EQ (se.getThemeName(), 'shiny')
       })
@@ -202,7 +207,7 @@ describe('SkyEnv', function() {
         process.chdir(TEST_DIR)
         fs.writeJsonSync(CFG_FILE, {})
         
-        var se = new SkyEnv(libsky.findBaseDirSync())
+        var se = new SkyEnv(findBaseDirSync())
         se.loadConfigsSync()
         EQ (se.getThemeName(), 'basic')
       })
@@ -213,7 +218,7 @@ describe('SkyEnv', function() {
     it('should retrieve the theme dir', function() {
       process.chdir(TEST_DIR)
         
-      var se = new SkyEnv(libsky.findBaseDirSync())
+      var se = skyenv(findBaseDirSync())
       se.loadConfigsSync()
       EQ (removePrivate(se.getThemeDir()), path.join(TEST_DIR, 'sky', 'themes', se.getThemeName()))
     })
@@ -222,8 +227,8 @@ describe('SkyEnv', function() {
   describe('- path()', function() {
     it('should join all the arguments with the base directory', function() {
       process.chdir(TEST_DIR)
-      var baseDir = libsky.findBaseDirSync()
-      var se = new SkyEnv(baseDir)
+      var baseDir = findBaseDirSync()
+      var se = skyenv(baseDir)
       var cfgFile = se.path('sky', 'config.json')
       EQ (cfgFile, path.join(baseDir, 'sky', 'config.json'))
     })

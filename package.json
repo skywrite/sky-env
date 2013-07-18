@@ -17,11 +17,13 @@
   ],
   "dependencies": {
     "fs-extra": "~0.6.3",
-    "jsoncfg": "~0.1.2"
+    "jsoncfg": "~0.1.2",
+    "string": "~1.5.0"
   },
   "devDependencies": {
     "testutil": "~0.5.1",
-    "autoresolve": "0.0.3"
+    "autoresolve": "0.0.3",
+    "parentpath": "~0.2.0"
   },
   "main": "./lib/sky-env.js",
   "scripts": {
