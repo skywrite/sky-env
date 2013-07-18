@@ -18,28 +18,6 @@ describe('SkyEnv', function() {
     process.chdir(TEST_DIR)
   })
 
-  describe('- getOutputDir()', function() {
-    describe('> when outputDir is specified', function() {
-      it('should return the absolute output dir', function() {
-        fs.writeJsonSync(CFG_FILE, {build: {outputDir: 'superman/'}})
-        
-        var se = new SkyEnv(tl.findBaseDirSync())
-        se.loadConfigsSync()
-        EQ (tl.removePrivate(se.getOutputDir()), path.join(TEST_DIR, 'superman'))
-      })
-    })
-
-    describe('> when outputDir is not specified', function() {
-      it('should return the absolute output dir', function() {
-        fs.writeJsonSync(CFG_FILE, {})
-        
-        var se = new SkyEnv(tl.findBaseDirSync())
-        se.loadConfigsSync()
-        EQ (tl.removePrivate(se.getOutputDir()), path.join(TEST_DIR, 'public'))
-      })
-    })
-  })
-
   describe('- mdArticleToOutputFileWithPath(mdfile, [data])', function() {
     describe('> when no data is passed as an arg', function() {
       it('should return a file with slug based upon markdown file name', function() {
@@ -59,7 +37,7 @@ describe('SkyEnv', function() {
         var data = {
           slug: 'burt-and-ernie'
         }
-        EQ (se.mdArticleToOutputFileWithPath(path.join(articlesDir, 'bitcoin-economics.md'), data), path.join(se.getOutputDir(), data.slug))
+        EQ (se.mdArticleToOutputFileWithPath(path.join(articlesDir, 'bitcoin-economics.md'), data), path.join(se.outputDir, data.slug))
       })
     })
 
@@ -77,7 +55,7 @@ describe('SkyEnv', function() {
         }
 
         var expected = "articles/2011/04/burt-and-ernie.html"
-        EQ (se.mdArticleToOutputFileWithPath(path.join(articlesDir, 'bitcoin-economics.md'), data), path.join(se.getOutputDir(), expected))
+        EQ (se.mdArticleToOutputFileWithPath(path.join(articlesDir, 'bitcoin-economics.md'), data), path.join(se.outputDir, expected))
       })
     })
   })
@@ -136,6 +114,26 @@ describe('SkyEnv', function() {
         var se = new SkyEnv(tl.findBaseDirSync())
         se.loadConfigsSync()
         EQ (se.lastBuild.getTime(), new Date('2013-04-01').getTime())
+      })
+    })
+  })
+
+  describe('- outputDir', function() {
+    describe('> when outputDir is specified', function() {
+      it('should return the absolute output dir', function() {
+        fs.writeJsonSync(CFG_FILE, {build: {outputDir: 'superman/'}})
+        var se = new SkyEnv(tl.findBaseDirSync())
+        se.loadConfigsSync()
+        EQ (tl.removePrivate(se.outputDir), path.join(TEST_DIR, 'superman'))
+      })
+    })
+
+    describe('> when outputDir is not specified', function() {
+      it('should return the absolute output dir', function() {
+        fs.writeJsonSync(CFG_FILE, {})
+        var se = new SkyEnv(tl.findBaseDirSync())
+        se.loadConfigsSync()
+        EQ (tl.removePrivate(se.outputDir), path.join(TEST_DIR, 'public'))
       })
     })
   })
