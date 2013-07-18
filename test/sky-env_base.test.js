@@ -169,11 +169,11 @@ describe('SkyEnv', function() {
     })
   })
 
-  describe('- getThemeDir()', function() {
+  describe('- themeDir', function() {
     it('should retrieve the theme dir', function() {        
       var se = skyenv(tl.findBaseDirSync())
       se.loadConfigsSync()
-      EQ (tl.removePrivate(se.getThemeDir()), path.join(TEST_DIR, 'sky', 'themes', se.themeName))
+      EQ (tl.removePrivate(se.themeDir), path.join(TEST_DIR, 'sky', 'themes', se.themeName))
     })
   })
 
