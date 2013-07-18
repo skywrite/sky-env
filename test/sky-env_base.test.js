@@ -82,44 +82,40 @@ describe('SkyEnv', function() {
     })
   })
 
-  describe('- getIndexTitle()', function() {
+  describe('- indexTitle', function() {
     describe('> when nothing is set', function() {
       it('should return basic title', function() {
         fs.writeJsonSync(CFG_FILE, {})
-        
         var se = new SkyEnv(tl.findBaseDirSync())
         se.loadConfigsSync()
-        EQ (se.getIndexTitle(), 'Sky Site')
+        EQ (se.indexTitle, 'Sky Site')
       })
     })
 
     describe('> when name is set', function() {
       it('should return name', function() {
         fs.writeJsonSync(CFG_FILE, {site: {name: 'Cool Blog'}})
-        
         var se = new SkyEnv(tl.findBaseDirSync())
         se.loadConfigsSync()
-        EQ (se.getIndexTitle(), 'Cool Blog')
+        EQ (se.indexTitle, 'Cool Blog')
       })
     })
 
     describe('> when name and tagline are set', function() {
       it('should return name and tagline', function() {
         fs.writeJsonSync(CFG_FILE, {site: {name: 'Cool Blog', tagline: 'where cool people visit'}})
-        
         var se = new SkyEnv(tl.findBaseDirSync())
         se.loadConfigsSync()
-        EQ (se.getIndexTitle(), 'Cool Blog: where cool people visit')
+        EQ (se.indexTitle, 'Cool Blog: where cool people visit')
       })
     })
 
     describe('> when name, tagline, and title are set', function() {
       it('should return title', function() {
         fs.writeJsonSync(CFG_FILE, {site: {name: 'Cool Blog', tagline: 'where cool people visit', title: 'TITLE'}})
-        
         var se = new SkyEnv(tl.findBaseDirSync())
         se.loadConfigsSync()
-        EQ (se.getIndexTitle(), 'TITLE')
+        EQ (se.indexTitle, 'TITLE')
       })
     })
   })
@@ -128,7 +124,6 @@ describe('SkyEnv', function() {
     describe('> when not set', function() {
       it('should return the default 0 date', function() {
         fs.writeJsonSync(CFG_FILE, {})
-        
         var se = new SkyEnv(tl.findBaseDirSync())
         se.loadConfigsSync()
         EQ (se.getLastBuild().getTime(), new Date(0).getTime())
