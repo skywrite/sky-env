@@ -140,6 +140,17 @@ describe('SkyEnv', function() {
     })
   })
 
+  describe('- partialFile()', function() {
+    it('should return the file path from the partial name', function() {
+      var dir = tl.findBaseDirSync()
+      var se = skyenv(dir)
+
+      //purposely doesn't include extension
+      EQ (se.partialFile('googleAnalytics'), path.join(dir, 'sky', 'partials', 'googleAnalytics'))
+
+    })
+  })
+
   describe('- getThemeName()', function() {
     describe('> when specified in config', function() {
       it('it should return the proper theme', function() {
