@@ -149,23 +149,22 @@ describe('SkyEnv', function() {
     })
   })
 
-  describe('- getThemeName()', function() {
+  describe('- themeName', function() {
     describe('> when specified in config', function() {
       it('it should return the proper theme', function() {
         fs.writeJsonSync(CFG_FILE, {site: {theme: 'shiny'}})
         var se = new SkyEnv(tl.findBaseDirSync())
         se.loadConfigsSync()
-        EQ (se.getThemeName(), 'shiny')
+        EQ (se.themeName, 'shiny')
       })
     })
 
     describe('> when its not specified in config', function() {
       it('it should return the proper theme', function() {
         fs.writeJsonSync(CFG_FILE, {})
-        
         var se = new SkyEnv(tl.findBaseDirSync())
         se.loadConfigsSync()
-        EQ (se.getThemeName(), 'basic')
+        EQ (se.themeName, 'basic')
       })
     })
   })
@@ -174,7 +173,7 @@ describe('SkyEnv', function() {
     it('should retrieve the theme dir', function() {        
       var se = skyenv(tl.findBaseDirSync())
       se.loadConfigsSync()
-      EQ (tl.removePrivate(se.getThemeDir()), path.join(TEST_DIR, 'sky', 'themes', se.getThemeName()))
+      EQ (tl.removePrivate(se.getThemeDir()), path.join(TEST_DIR, 'sky', 'themes', se.themeName))
     })
   })
 
