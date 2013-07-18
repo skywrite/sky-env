@@ -96,30 +96,6 @@ describe('SkyEnv', function() {
     })
   })
 
-  describe('- getArticleIndex()', function() {
-    describe('> when specified in config', function() {
-      it('should return the proper index file', function() {
-        process.chdir(TEST_DIR)
-        fs.writeJsonSync(CFG_FILE, {articles: {index: 'superIndex'}})
-
-        var se = new SkyEnv(findBaseDirSync())
-        se.loadConfigsSync()
-        EQ (se.getArticleIndex(), 'superIndex')
-      })
-    })
-
-    describe('> when not specified in config', function() {
-      it('should return the proper index file', function() {
-        process.chdir(TEST_DIR)
-        fs.writeJsonSync(CFG_FILE, {})
-
-        var se = new SkyEnv(findBaseDirSync())
-        se.loadConfigsSync()
-        EQ (se.getArticleIndex(), 'index.html')
-      })
-    })
-  })
-
   describe('- getIndexTitle()', function() {
     describe('> when nothing is set', function() {
       it('should return basic title', function() {
