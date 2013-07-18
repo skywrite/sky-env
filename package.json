@@ -1,0 +1,30 @@
+{
+  "name": "sky-env",
+  "version": "0.4.0",
+  "description": "",
+  "homepage": "",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [],
+  "author": "JP Richardson <jprichardson@gmail.com>",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": ""
+    }
+  ],
+  "dependencies": {
+    "fs-extra": "~0.6.3",
+    "jsoncfg": "~0.1.2"
+  },
+  "devDependencies": {
+    "testutil": "~0.5.1",
+    "autoresolve": "0.0.3"
+  },
+  "main": "./lib/sky-env.js",
+  "scripts": {
+    "test": "mocha test"
+  }
+}
