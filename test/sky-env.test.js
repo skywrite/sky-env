@@ -4,50 +4,38 @@ var testutil = require('testutil')
   , skyenv  = require(P('lib/sky-env'))
   , SkyEnv = skyenv.SkyEnv
   , path = require('path')
-  , pp = require('parentpath')
+  , tl = require(P('test/testlib/util'))
 
 var TEST_DIR = null
   , CFG_FILE = null
 
-function removePrivate(dir) {
-  if (!dir) return null
-
-  if (dir.indexOf('/private/tmp') === 0)  //MAC OS X symlinks /tmp to /private/tmp
-    dir = dir.replace('/private', '');
-  return dir
-}
-
-function findBaseDirSync () {
-  return pp.sync('sky/config.json')
-}
 
 describe('SkyEnv', function() {
   beforeEach(function() {
     TEST_DIR = testutil.createTestDir('sky')
     CFG_FILE = path.join(TEST_DIR, 'sky', 'config.json')
     fs.outputFileSync(CFG_FILE, '')
+    process.chdir(TEST_DIR)
   })
 
   describe('- getOutputDir()', function() {
     describe('> when outputDir is specified', function() {
       it('should return the absolute output dir', function() {
-        process.chdir(TEST_DIR)
         fs.writeJsonSync(CFG_FILE, {build: {outputDir: 'superman/'}})
         
-        var se = new SkyEnv(findBaseDirSync())
+        var se = new SkyEnv(tl.findBaseDirSync())
         se.loadConfigsSync()
-        EQ (removePrivate(se.getOutputDir()), path.join(TEST_DIR, 'superman'))
+        EQ (tl.removePrivate(se.getOutputDir()), path.join(TEST_DIR, 'superman'))
       })
     })
 
     describe('> when outputDir is not specified', function() {
       it('should return the absolute output dir', function() {
-        process.chdir(TEST_DIR)
         fs.writeJsonSync(CFG_FILE, {})
         
-        var se = new SkyEnv(findBaseDirSync())
+        var se = new SkyEnv(tl.findBaseDirSync())
         se.loadConfigsSync()
-        EQ (removePrivate(se.getOutputDir()), path.join(TEST_DIR, 'public'))
+        EQ (tl.removePrivate(se.getOutputDir()), path.join(TEST_DIR, 'public'))
       })
     })
   })
@@ -63,11 +51,10 @@ describe('SkyEnv', function() {
 
     describe('> when urlformat exists', function() {
       it('should return the proper name with the data slug', function() {
-        process.chdir(TEST_DIR)
         var articlesDir = path.join(TEST_DIR, 'articles')
         fs.writeJsonSync(CFG_FILE, {articles: {urlformat: '{{slug}}'}})
         
-        var se = new SkyEnv(findBaseDirSync())
+        var se = new SkyEnv(tl.findBaseDirSync())
         se.loadConfigsSync()
         var data = {
           slug: 'burt-and-ernie'
@@ -78,11 +65,10 @@ describe('SkyEnv', function() {
 
     describe('> when urlformat does not exist', function() {
       it('should return the proper name with the data slug', function() {
-        process.chdir(TEST_DIR)
         var articlesDir = path.join(TEST_DIR, 'articles')
         fs.writeJsonSync(CFG_FILE, {})
         
-        var se = new SkyEnv(findBaseDirSync())
+        var se = new SkyEnv(tl.findBaseDirSync())
         se.loadConfigsSync()
         var data = {
           slug: 'burt-and-ernie',
@@ -99,10 +85,9 @@ describe('SkyEnv', function() {
   describe('- getIndexTitle()', function() {
     describe('> when nothing is set', function() {
       it('should return basic title', function() {
-        process.chdir(TEST_DIR)
         fs.writeJsonSync(CFG_FILE, {})
         
-        var se = new SkyEnv(findBaseDirSync())
+        var se = new SkyEnv(tl.findBaseDirSync())
         se.loadConfigsSync()
         EQ (se.getIndexTitle(), 'Sky Site')
       })
@@ -110,10 +95,9 @@ describe('SkyEnv', function() {
 
     describe('> when name is set', function() {
       it('should return name', function() {
-        process.chdir(TEST_DIR)
         fs.writeJsonSync(CFG_FILE, {site: {name: 'Cool Blog'}})
         
-        var se = new SkyEnv(findBaseDirSync())
+        var se = new SkyEnv(tl.findBaseDirSync())
         se.loadConfigsSync()
         EQ (se.getIndexTitle(), 'Cool Blog')
       })
@@ -121,10 +105,9 @@ describe('SkyEnv', function() {
 
     describe('> when name and tagline are set', function() {
       it('should return name and tagline', function() {
-        process.chdir(TEST_DIR)
         fs.writeJsonSync(CFG_FILE, {site: {name: 'Cool Blog', tagline: 'where cool people visit'}})
         
-        var se = new SkyEnv(findBaseDirSync())
+        var se = new SkyEnv(tl.findBaseDirSync())
         se.loadConfigsSync()
         EQ (se.getIndexTitle(), 'Cool Blog: where cool people visit')
       })
@@ -132,10 +115,9 @@ describe('SkyEnv', function() {
 
     describe('> when name, tagline, and title are set', function() {
       it('should return title', function() {
-        process.chdir(TEST_DIR)
         fs.writeJsonSync(CFG_FILE, {site: {name: 'Cool Blog', tagline: 'where cool people visit', title: 'TITLE'}})
         
-        var se = new SkyEnv(findBaseDirSync())
+        var se = new SkyEnv(tl.findBaseDirSync())
         se.loadConfigsSync()
         EQ (se.getIndexTitle(), 'TITLE')
       })
@@ -145,10 +127,9 @@ describe('SkyEnv', function() {
   describe('- getLastBuild()', function() {
     describe('> when not set', function() {
       it('should return the default 0 date', function() {
-        process.chdir(TEST_DIR)
         fs.writeJsonSync(CFG_FILE, {})
         
-        var se = new SkyEnv(findBaseDirSync())
+        var se = new SkyEnv(tl.findBaseDirSync())
         se.loadConfigsSync()
         EQ (se.getLastBuild().getTime(), new Date(0).getTime())
       })
@@ -156,10 +137,9 @@ describe('SkyEnv', function() {
 
     describe('> when set', function() {
       it('should return the  date', function() {
-        process.chdir(TEST_DIR)
         fs.writeJsonSync(CFG_FILE, {build: {lastBuild: '2013-04-01'}})
         
-        var se = new SkyEnv(findBaseDirSync())
+        var se = new SkyEnv(tl.findBaseDirSync())
         se.loadConfigsSync()
         EQ (se.getLastBuild().getTime(), new Date('2013-04-01').getTime())
       })
@@ -169,10 +149,9 @@ describe('SkyEnv', function() {
   describe('- getThemeName()', function() {
     describe('> when specified in config', function() {
       it('it should return the proper theme', function() {
-        process.chdir(TEST_DIR)
         fs.writeJsonSync(CFG_FILE, {site: {theme: 'shiny'}})
         
-        var se = new SkyEnv(findBaseDirSync())
+        var se = new SkyEnv(tl.findBaseDirSync())
         se.loadConfigsSync()
         EQ (se.getThemeName(), 'shiny')
       })
@@ -180,10 +159,9 @@ describe('SkyEnv', function() {
 
     describe('> when its not specified in config', function() {
       it('it should return the proper theme', function() {
-        process.chdir(TEST_DIR)
         fs.writeJsonSync(CFG_FILE, {})
         
-        var se = new SkyEnv(findBaseDirSync())
+        var se = new SkyEnv(tl.findBaseDirSync())
         se.loadConfigsSync()
         EQ (se.getThemeName(), 'basic')
       })
@@ -191,19 +169,16 @@ describe('SkyEnv', function() {
   })
 
   describe('- getThemeDir()', function() {
-    it('should retrieve the theme dir', function() {
-      process.chdir(TEST_DIR)
-        
-      var se = skyenv(findBaseDirSync())
+    it('should retrieve the theme dir', function() {        
+      var se = skyenv(tl.findBaseDirSync())
       se.loadConfigsSync()
-      EQ (removePrivate(se.getThemeDir()), path.join(TEST_DIR, 'sky', 'themes', se.getThemeName()))
+      EQ (tl.removePrivate(se.getThemeDir()), path.join(TEST_DIR, 'sky', 'themes', se.getThemeName()))
     })
   })
 
   describe('- path()', function() {
     it('should join all the arguments with the base directory', function() {
-      process.chdir(TEST_DIR)
-      var baseDir = findBaseDirSync()
+      var baseDir = tl.findBaseDirSync()
       var se = skyenv(baseDir)
       var cfgFile = se.path('sky', 'config.json')
       EQ (cfgFile, path.join(baseDir, 'sky', 'config.json'))
