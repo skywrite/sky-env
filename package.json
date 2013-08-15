@@ -1,13 +1,25 @@
 {
   "name": "sky-env",
   "version": "0.4.0",
-  "description": "",
+  "description": "Conveniently access to information from a sky environment.",
   "homepage": "",
   "repository": {
     "type": "git",
     "url": ""
   },
-  "keywords": [],
+  "keywords": [    
+    "blog",
+    "static",
+    "markdown",
+    "git",
+    "github",
+    "octopress",
+    "jekyl",
+    "cms",
+    "content",
+    "static",
+    "sky"
+  ],
   "author": "JP Richardson <jprichardson@gmail.com>",
   "licenses": [
     {
