@@ -1,13 +1,13 @@
 {
   "name": "sky-env",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Conveniently access to information from a sky environment.",
   "homepage": "",
   "repository": {
     "type": "git",
     "url": ""
   },
-  "keywords": [    
+  "keywords": [
     "blog",
     "static",
     "markdown",
@@ -30,7 +30,7 @@
   "dependencies": {
     "fs-extra": "~0.6.3",
     "jsoncfg": "~0.1.2",
-    "string": "~1.5.0"
+    "string": "~1.5.1"
   },
   "devDependencies": {
     "testutil": "~0.5.1",
